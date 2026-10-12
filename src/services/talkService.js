@@ -11,6 +11,8 @@ import logger from '../utils/logger.js'
 import { removeMailtoPrefix } from '../utils/attendee.js'
 import md5 from 'md5'
 
+const DEFAULT_CALL_WEB_PATH = '/call/'
+
 /**
  * Creates a new public talk room
  *
@@ -133,8 +135,37 @@ export function doesContainTalkLink(text) {
 
 	// TODO: there is most definitely a more reliable way,
 	// but this works for now
-	const fakeUrl = generateURLForToken()
-	return text.includes(fakeUrl)
+	// Murena: links created before a custom app path was set still use `/call/`
+	return [getCallWebPath(), DEFAULT_CALL_WEB_PATH]
+		.some((callWebPath) => text.includes(generateURLForCallWebPath(callWebPath)))
+}
+
+/**
+ * Murena: Talk can be served below a custom app path (e.g. `/apps/meet`),
+ * calls are then served below `<custom_app_path>/call/` instead of `/call/`
+ *
+ * @return {string}
+ */
+function getCallWebPath() {
+	const customAppPath = loadState('calendar', 'talk_custom_app_path', '')
+	if (customAppPath === '') {
+		return DEFAULT_CALL_WEB_PATH
+	}
+
+	return customAppPath + DEFAULT_CALL_WEB_PATH
+}
+
+/**
+ * Generates an absolute URL below the given call web path
+ *
+ * @param {string} callWebPath Path the calls are served below
+ * @param {string} token The token to the call room
+ * @return {string}
+ */
+function generateURLForCallWebPath(callWebPath, token = '') {
+	return generateUrl(callWebPath + token, {}, {
+		baseURL: getBaseUrl(),
+	})
 }
 
 /**
@@ -144,9 +175,7 @@ export function doesContainTalkLink(text) {
  * @return {string}
  */
 export function generateURLForToken(token = '') {
-	return generateUrl('/call/' + token, {}, {
-		baseURL: getBaseUrl(),
-	})
+	return generateURLForCallWebPath(getCallWebPath(), token)
 }
 
 /**

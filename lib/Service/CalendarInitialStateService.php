@@ -64,6 +64,7 @@ class CalendarInitialStateService {
 
 		$talkEnabled = $this->appManager->isEnabledForUser('spreed');
 		$talkApiVersion = version_compare($this->appManager->getAppVersion('spreed'), '12.0.0', '>=') ? 'v4' : 'v1';
+		$talkCustomAppPath = $this->getTalkCustomAppPath();
 		$tasksEnabled = $this->appManager->isEnabledForUser('tasks');
 
 		$circleVersion = $this->appManager->getAppVersion('circles');
@@ -80,6 +81,7 @@ class CalendarInitialStateService {
 		$this->initialStateService->provideInitialState('skip_popover', $skipPopover);
 		$this->initialStateService->provideInitialState('talk_enabled', $talkEnabled);
 		$this->initialStateService->provideInitialState('talk_api_version', $talkApiVersion);
+		$this->initialStateService->provideInitialState('talk_custom_app_path', $talkCustomAppPath);
 		$this->initialStateService->provideInitialState('timezone', $timezone);
 		$this->initialStateService->provideInitialState('attachments_folder', $attachmentsFolder);
 		$this->initialStateService->provideInitialState('slot_duration', $slotDuration);
@@ -97,6 +99,29 @@ class CalendarInitialStateService {
 		$this->initialStateService->provideInitialState('show_resources', $showResources);
 		$this->initialStateService->provideInitialState('isCirclesEnabled', $isCirclesEnabled && $isCircleVersionCompatible);
 		$this->initialStateService->provideInitialState('publicCalendars', $publicCalendars);
+	}
+
+	/**
+	 * Murena: Talk can be served below a custom app path (e.g. `/apps/meet`),
+	 * set with `occ config:app:set spreed custom_app_path --value=/apps/meet`.
+	 * Calls are then served below `<custom_app_path>/call/` instead of `/call/`.
+	 *
+	 * @return string The path with a leading and without a trailing slash,
+	 *                or an empty string when not configured
+	 */
+	private function getTalkCustomAppPath(): string {
+		$path = trim($this->config->getAppValue('spreed', 'custom_app_path', ''), '/');
+		if ($path === '') {
+			return '';
+		}
+
+		$path = '/' . $path;
+		if ($path === '/apps/spreed') {
+			// The default app path is not a custom one
+			return '';
+		}
+
+		return $path;
 	}
 
 	/**

@@ -62,7 +62,7 @@ class CalendarInitialStateServiceTest extends TestCase {
 			$this->compareVersion,
 			$this->userId,
 		);
-		$this->config->expects(self::exactly(17))
+		$this->config->expects(self::exactly(18))
 			->method('getAppValue')
 			->willReturnMap([
 				['calendar', 'eventLimit', 'yes', 'defaultEventLimit'],
@@ -82,6 +82,7 @@ class CalendarInitialStateServiceTest extends TestCase {
 				['dav', 'allow_calendar_link_subscriptions', 'yes', 'no'],
 				['calendar', 'showResources', 'yes', 'yes'],
 				['calendar', 'publicCalendars', ''],
+				['spreed', 'custom_app_path', '', ''],
 			]);
 		$this->config->expects(self::exactly(12))
 			->method('getUserValue')
@@ -116,7 +117,7 @@ class CalendarInitialStateServiceTest extends TestCase {
 			->method('getAllAppointmentConfigurations')
 			->with($this->userId)
 			->willReturn([new AppointmentConfig()]);
-		$this->initialStateService->expects(self::exactly(24))
+		$this->initialStateService->expects(self::exactly(25))
 			->method('provideInitialState')
 			->withConsecutive(
 				['app_version', '1.0.0'],
@@ -128,6 +129,7 @@ class CalendarInitialStateServiceTest extends TestCase {
 				['skip_popover', true],
 				['talk_enabled', true],
 				['talk_api_version', 'v4'],
+				['talk_custom_app_path', ''],
 				['timezone', 'Europe/Berlin'],
 				['attachments_folder', '/Calendar'],
 				['slot_duration', '00:15:00'],
@@ -158,7 +160,7 @@ class CalendarInitialStateServiceTest extends TestCase {
 			$this->compareVersion,
 			null,
 		);
-		$this->config->expects(self::exactly(17))
+		$this->config->expects(self::exactly(18))
 			->method('getAppValue')
 			->willReturnMap([
 				['calendar', 'eventLimit', 'yes', 'defaultEventLimit'],
@@ -178,6 +180,7 @@ class CalendarInitialStateServiceTest extends TestCase {
 				['dav', 'allow_calendar_link_subscriptions', 'yes', 'no'],
 				['calendar', 'showResources', 'yes', 'yes'],
 				['calendar', 'publicCalendars', ''],
+				['spreed', 'custom_app_path', '', ''],
 			]);
 		$this->config->expects(self::exactly(12))
 			->method('getUserValue')
@@ -208,7 +211,7 @@ class CalendarInitialStateServiceTest extends TestCase {
 				['spreed', true, '12.0.0'],
 				['circles', true, '22.0.0'],
 			]);
-		$this->initialStateService->expects(self::exactly(23))
+		$this->initialStateService->expects(self::exactly(24))
 			->method('provideInitialState')
 			->withConsecutive(
 				['app_version', '1.0.0'],
@@ -220,6 +223,7 @@ class CalendarInitialStateServiceTest extends TestCase {
 				['skip_popover', true],
 				['talk_enabled', true],
 				['talk_api_version', 'v4'],
+				['talk_custom_app_path', ''],
 				['timezone', 'Europe/Berlin'],
 				['attachments_folder', '/Calendar'],
 				['slot_duration', '00:15:00'],
@@ -255,7 +259,7 @@ class CalendarInitialStateServiceTest extends TestCase {
 			$this->compareVersion,
 			$this->userId,
 		);
-		$this->config->expects(self::exactly(17))
+		$this->config->expects(self::exactly(18))
 			->method('getAppValue')
 			->willReturnMap([
 				['calendar', 'eventLimit', 'yes', 'defaultEventLimit'],
@@ -275,6 +279,7 @@ class CalendarInitialStateServiceTest extends TestCase {
 				['dav', 'allow_calendar_link_subscriptions', 'yes', 'no'],
 				['calendar', 'showResources', 'yes', 'yes'],
 				['calendar', 'publicCalendars', ''],
+				['spreed', 'custom_app_path', '', ''],
 			]);
 		$this->config->expects(self::exactly(12))
 			->method('getUserValue')
@@ -309,7 +314,7 @@ class CalendarInitialStateServiceTest extends TestCase {
 			->method('getAllAppointmentConfigurations')
 			->with($this->userId)
 			->willReturn([new AppointmentConfig()]);
-		$this->initialStateService->expects(self::exactly(24))
+		$this->initialStateService->expects(self::exactly(25))
 			->method('provideInitialState')
 			->withConsecutive(
 				['app_version', '1.0.0'],
@@ -321,6 +326,7 @@ class CalendarInitialStateServiceTest extends TestCase {
 				['skip_popover', true],
 				['talk_enabled', false],
 				['talk_api_version', 'v1'],
+				['talk_custom_app_path', ''],
 				['timezone', 'Europe/Berlin'],
 				['attachments_folder', '/Calendar'],
 				['slot_duration', '00:15:00'],
